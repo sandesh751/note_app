@@ -1,0 +1,42 @@
+name: Deploy to Google Cloud Storage
+
+on:
+  push:
+    branches:
+      - main  # Runs automatically when you push code to the main branch
+
+# Permissions required to fetch cryptographic tokens for Workload Identity
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Download your source code onto the GitHub runner machine
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    # Step 2: Securely authenticate with GCP using OIDC (No long-lived JSON keys)
+    - name: Authenticate to Google Cloud
+      id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_PROVIDER }}
+        service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+    # Step 3: Install and configure Google Cloud SDK (gcloud CLI tools)
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+
+    # Step 4: Synchronise files to your GCS Bucket
+    - name: Sync Files to GCS Bucket
+      run: |
+        # Synchronises the current directory (.) with your cloud storage bucket
+        # --recursive: Includes all sub-directories and assets
+        # --delete-unmatched: Deletes files in GCS that were deleted from GitHub
+        
+        gcloud storage rsync . gs://${{ secrets.GCS_BUCKET_NAME }} --recursive --delete-unmatched
