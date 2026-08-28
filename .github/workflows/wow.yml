@@ -21,8 +21,10 @@ jobs:
           zone: us-central1-a
           ssh_private_key: ${{ secrets.KEY }}
           command: |
-            sudo cd /home/sandeshsaini7983637650/github/note_app || cd /root/github/note_app
-            sudo git pull origin main
-            sudo docker compose up -d --build
+             sudo bash -c "
+             cd /home/sandeshsaini7983637650/github/note_app || cd /root/github/note_app
+             git pull origin main
+             docker compose up -d --build
+             "
         
     
