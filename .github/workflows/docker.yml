@@ -15,7 +15,7 @@ jobs:
        uses: appleboy/ssh-action@v1.0.3
        with:
          host: ${{ secrets.HOST }}
-         usename: ${{ secrets.SSH_USERNAME }}
+         username: ${{ secrets.SSH_USERNAME }}
          key: ${{ secrets.KEY }}
          scripts: |
            cd /home/sandeshsaini7983637650/github
