@@ -1,1 +1,28 @@
+name: testing-deployment
 
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: Authenticate to google cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.JSON_KEY }}
+      - name: ssh to vm
+        uses: google-github-actions/ssh-compute@v2
+        with:
+          instance_name: instance-20260826-152012
+          zone: us-central1-a
+          ssh_private_key: ${{ secrets.KEY }}
+          command: |
+            sudo cd /home/sandeshsaini7983637650/github/note_app || cd /root/github/note_app
+            sudo git pull origin main
+            sudo docker compose up -d --build
+        
+    
