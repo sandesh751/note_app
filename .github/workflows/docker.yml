@@ -18,7 +18,7 @@ jobs:
          username: ${{ secrets.SSH_USERNAME }}
          key: ${{ secrets.KEY }}
          script: |
-           cd /root/github
+           cd /home/sandeshsaini7983637650/github
            git pull origin main
            docker compose up -d --build
          
