@@ -1,0 +1,24 @@
+name: deploy-docker
+
+on:
+ push:
+   branches:
+     - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+     - name: checkout
+       uses: actions/checkout@v1
+     - name: ssh to login
+       uses: appleboy/ssh-action@v1.0.3
+       with:
+         host: ${{ secrets.HOST }}
+         usename: ${{ secrets.SSH_USERNAME }}
+         key: ${{ secrets.KEY }}
+         scripts: |
+           cd /home/sandeshsaini7983637650/github
+           git pull origin main
+           docker compose up -d --build
+         
