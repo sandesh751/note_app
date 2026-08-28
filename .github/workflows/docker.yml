@@ -14,11 +14,16 @@ jobs:
      - name: ssh to login
        uses: appleboy/ssh-action@v1.0.3
        with:
-         host: ${{ secrets.HOST }}
-         username: ${{ secrets.SSH_USERNAME }}
-         key: ${{ secrets.KEY }}
-         script: |
-           cd /home/sandeshsaini7983637650/github
-           git pull origin main
-           docker compose up -d --build
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: 22
+          script_stop: true
+          script: |
+            cd /home/sandeshsaini7983637650/github || cd /root/github
+            sudo git reset --hard origin/main
+            sudo git config pull.rebase false
+            sudo git pull origin main
+            sudo docker compose up -d --build
+
          
